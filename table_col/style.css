@@ -3,3 +3,23 @@ table, thead, tr, th, td{
     border-collapse: collapse;
     text-align: center;
 }
+th{
+    background-color: lightslategray;  
+}
+
+table table ~ tbody > tr{
+    background-color: beige;
+}
+
+
+tbody tr:hover{
+    background-color: red !important;
+}
+
+
+table tbody > tr:nth-child(odd){
+    background-color: cornsilk; 
+}
+table tbody > tr:nth-child(even){
+    background-color: cadetblue; 
+}
