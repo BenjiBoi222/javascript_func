@@ -1,0 +1,37 @@
+table, tbody, thead, tr, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+
+tbody tr td:last-child, tr td:nth-last-child(3) {
+    background-color: rgb(255, 0, 0);
+}
+
+
+tr:has(td[rowspan]):hover td {
+    background-color: rgb(53, 130, 116);
+    font-weight: bolder;
+    color: white;
+}
+
+tr:has(+tr:hover) + tr td {
+    background-color: saddlebrown;
+    font-weight: bolder;
+    color: white;
+}
+
+
+tr:has(td[rowspan]):has(+tr:hover) td {
+    background-color: saddlebrown;
+    font-weight: bolder;
+    color: white;
+}
+
+
+tr:has(td[rowspan]):hover + tr td {
+    background-color: rgb(53, 130, 116);
+    font-weight: bolder;
+    color: white;
+}
+
