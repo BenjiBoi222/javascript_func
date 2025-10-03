@@ -1,8 +1,16 @@
-table, thead, tr, th, td{
+table, thead, tr,  td{
+    border: 1px solid black;
+    border-collapse: collapse;
+    text-align: center;
+    vertical-align: middle;
+}
+/*
+table, thead + tr > th , tr, td{
     border: 1px solid black;
     border-collapse: collapse;
     text-align: center;
 }
+*/
 th{
     background-color: lightslategray;  
 }
@@ -22,4 +30,7 @@ table tbody > tr:nth-child(odd){
 }
 table tbody > tr:nth-child(even){
     background-color: cadetblue; 
+}
+table tbody tr:not(:has(td[colspan])){
+    background-color: yellow;
 }
