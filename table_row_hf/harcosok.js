@@ -1,6 +1,6 @@
 
 
-
+/*
 const arr = [
     {
         war: 'Rákóczi szabadságharc',
@@ -82,5 +82,78 @@ for (const a of arr)
         const td5 = document.createElement("td")
         td5.innerText = a.team2Size
         tr2_2.appendChild(td5)
+    }
+}*/
+
+
+const arr = [
+    {
+        theme: 'Optika',
+        time: 'XI. század',
+        scientist1: 'Alhazen'
+    },
+    {
+        theme: 'Asztronómia',
+        time: 'reneszánsz',
+        scientist1: 'Kepler',
+        scientist2: 'Galilei'
+    },
+    {
+        theme: 'Kvantumfizika',
+        time: 'XIX-XX. század',
+        scientist1: 'Max Planck',
+        scientist2: 'Albert Einstein'
+    },
+    {
+        theme: 'Relativitáselmélet',
+        time: 'XX. század',
+        scientist1: 'Albert Einstein',
+        scientist2: 'Niels Bohr'
+    }
+]
+
+const table = document.createElement("table")
+document.body.appendChild(table)
+
+const thead = document.createElement("thead")
+table.appendChild(thead)
+const trHead = document.createElement("tr")
+thead.appendChild(trHead)
+
+const th1 = document.createElement("th")
+th1.innerText = "Téma"
+trHead.appendChild(th1)
+const th2 = document.createElement("th")
+th2.innerText = "Korszak"
+trHead.appendChild(th2)
+const th3 = document.createElement("th")
+th3.innerText = "Tudós"
+trHead.appendChild(th3)
+
+const tbody = document.createElement("tbody")
+table.appendChild(tbody)
+
+for (const i of arr){
+    const tr = document.createElement("tr")
+    tbody.appendChild(tr)
+    
+    const td1 = document.createElement("td")
+    td1.innerText = i.theme
+    tr.appendChild(td1)
+
+    const td2 = document.createElement("td")
+    td2.innerText = i.time
+    tr.appendChild(td2)
+
+    const td3 = document.createElement("td")
+    td3.innerText = i.scientist1
+    tr.appendChild(td3)
+
+    if(i.scientist2 !== undefined){
+        const td4 = document.createElement('td')
+        td4.innerText = i.scientist2
+        tr.appendChild(td4)
+    }else{
+        td3.colSpan = 2
     }
 }
