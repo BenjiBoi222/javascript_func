@@ -90,7 +90,11 @@ tr.appendChild(th2)
 const th3 = document.createElement('th')
 th3.innerText = "Képviselők"
 th3.colSpan = 2
+th3.className = "Anyád"
 tr.appendChild(th3)
+
+
+
 
 
 const tbody = document.createElement('tbody')

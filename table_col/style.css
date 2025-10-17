@@ -31,3 +31,6 @@ table tbody > tr:nth-child(odd){
 table tbody > tr:nth-child(even){
     background-color: cadetblue; 
 }
+.Anyád{
+    background-color: aliceblue;
+}
