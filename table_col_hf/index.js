@@ -1,7 +1,9 @@
+
+
 /**
  * @type {{theme:string, time:string, scientist1:string, scientist2?:string}[]}
  */
-
+/*
 const arr = [
     {
         theme: 'Optika',
@@ -69,3 +71,4 @@ tr2.appendChild(td3)
 
 
 
+*/

@@ -90,7 +90,6 @@ tr.appendChild(th2)
 const th3 = document.createElement('th')
 th3.innerText = "Képviselők"
 th3.colSpan = 2
-th3.className = "Anyád"
 tr.appendChild(th3)
 
 
@@ -126,3 +125,14 @@ for (const a of arr) {
     }
 }
 
+/**
+ * @param {string} cellType 
+ * @param {string} cellContent 
+ * @param {HTMLTableRowElement} cellRow 
+ */
+
+function createCellElement(cellType, cellContent, cellRow){
+    const type = document.createElement(cellType)
+    type.innerText = cellContent
+    cellType.appendChild(cellRow)
+}
