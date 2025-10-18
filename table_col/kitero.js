@@ -37,102 +37,80 @@ console.log(a);
 
 
 
-
 /**
- * @type {{theme:string, time:string, scientist1:string, scientist2?:string}[]}
- */
+* @type {{name:string, time:string, love1:string, love2?:string}[]}
+*/
 
 const arr = [
     {
-        theme: 'Optika',
-        time: 'XI. század',
-        scientist1: 'Alhazen'
+        name: `Balassi Bálint`,
+        time: `reformáció`,
+        love1: `Losonczy Anna`,
+        love2: `Dobó Krisztina`
     },
     {
-        theme: 'Asztronómia',
-        time: 'Reneszánsz',
-        scientist1: 'Kepler',
-        scientist2: 'Galilei'
+        name: `Csokonai Vitéz Mihály`,
+        time: `felvilágosodás`,
+        love1: `Vajda Juliána`
     },
     {
-        theme: 'Kvantumfizika',
-        time: 'XIX-XX. század',
-        scientist1: 'Max Planck',
-        scientist2: 'Albert Einstein'
+        name: `Petőfi Sándor`,
+        time: `magyar romantika`,
+        love1: `Mednyanszky Berta`,
+        love2: `Szendrey Júlia`
     },
     {
-        theme: 'Modern fizika',
-        time: 'XX-XXI. század',
-        scientist1: 'Richard Feynman',
-        scientist2: 'Stephen Hawking'
+        name: `Ady Endre`,
+        time: `20. század`,
+        love1: `Léda`,
+        love2: `Csinszka`
     }
 ]
 
+const table = document.createElement('table');
+document.body.appendChild(table);
 
-const table = document.createElement('table')
-document.body.appendChild(table)
+const thead = document.createElement('thead');
+table.appendChild(thead);
 
+const tr1 = document.createElement('tr');
+thead.appendChild(tr1);
 
-const thead = document.createElement('thead')
-table.appendChild(thead)
-
-const tr = document.createElement('tr')
-thead.appendChild(tr)
-
-const th = document.createElement('th')
-th.innerText = "Fizika terület"
-tr.appendChild(th)
-
-const th2 = document.createElement('th')
-th2.innerText = "Időszak"
-tr.appendChild(th2)
-
-const th3 = document.createElement('th')
-th3.innerText = "Képviselők"
-th3.colSpan = 2
-tr.appendChild(th3)
+createCellElement("th", "Szerző neve", tr1);
+createCellElement("th", "Korszak", tr1);
+createCellElement("th", "Szerelmek", tr1).colSpan = 2;;
 
 
+const tbody = document.createElement('tbody');
+table.appendChild(tbody);
 
+for (const ar of arr) {
+    const tr2 = document.createElement('tr');
+    tbody.appendChild(tr2);
 
-
-const tbody = document.createElement('tbody')
-table.appendChild(tbody)
-
-
-for (const a of arr) {
-    const trRow = document.createElement('tr')
-    tbody.appendChild(trRow)
-
-    const td1 = document.createElement('td')
-    td1.innerText = a.theme
-    trRow.appendChild(td1)
-
-    const td2 = document.createElement('td')
-    td2.innerText = a.time
-    trRow.appendChild(td2)
-
-    const td3 = document.createElement('td')
-    td3.innerText = a.scientist1
-    trRow.appendChild(td3)
-
-    if (a.scientist2 !== undefined) {
-        const td4 = document.createElement('td')
-        td4.innerText = a.scientist2
-        trRow.appendChild(td4)
-    } else {
-        td3.colSpan = 2
-    }
+    createCellElement("td", ar.name, tr2);
+    createCellElement("td", ar.time, tr2);
+    const td3 = createCellElement("td", ar.love1, tr2);
+    if(ar.love2) {
+        /*
+        const td4 = document.createElement('td');
+        td4.innerText = ar.love2;
+        tr2.appendChild(td4);
+        */
+        createCellElement("td", ar.love2, tr2);
+    }else td3.colSpan = 2;
 }
 
 /**
- * @param {string} cellType 
- * @param {string} cellContent 
- * @param {HTMLTableRowElement} cellRow 
- */
-
-function createCellElement(cellType, cellContent, cellRow){
-    const type = document.createElement(cellType)
-    type.innerText = cellContent
-    cellType.appendChild(cellRow)
+* létrehoz egy táblázatcella elemet és hozzáfűzi egy sorhoz
+* @param {string} cellType - cella típusa: th/td
+* @param {string} cellContent - a cella szövege
+* @param {HTMLTableRowElement} cellRow - ehhez a sorhoz fogja hozzáadni
+* @returns {HTMLTableCellElement} - td
+*/
+function createCellElement(cellType, cellContent, cellRow) {
+    const type = document.createElement(cellType);
+    type.innerText = cellContent;
+    cellRow.appendChild(type);
+    return type;
 }
