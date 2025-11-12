@@ -1,140 +1,141 @@
+
 /**
 * @type {{name:string, time:string, love1:string, love2?:string}[]}
 */
+
 const arr = [
     {
-        name: `Balassi B�lint`,
-        time: `reform�ci�`,
+        name: `Balassi Bálint`,
+        time: `reformáció`,
         love1: `Losonczy Anna`,
-        love2: `Dob� Krisztina`
+        love2: `Dobó Krisztina`
     },
     {
-        name: `Csokonai Vit�z Mih�ly`,
-        time: `felvil�gosod�s`,
-        love1: `Vajda Juli�na`
+        name: `Csokonai Vitéz Mihály`,
+        time: `felvilágosodás`,
+        love1: `Vajda Juliána`
     },
     {
-        name: `Pet?fi S�ndor`,
+        name: `Petőfi Sándor`,
         time: `magyar romantika`,
         love1: `Mednyanszky Berta`,
-        love2: `Szendrey J�lia`
+        love2: `Szendrey Júlia`
     },
     {
         name: `Ady Endre`,
-        time: `20. sz�zad`,
-        love1: `L�da`,
+        time: `20. század`,
+        love1: `Léda`,
         love2: `Csinszka`
     }
 ]
 
-// t�bla l�trehoz�sa �s hozz�ad�sa a dokumentumhoz
-const table = document.createElement('table');
-document.body.appendChild(table);
+//táblázat létrehozása
+const table = document.createElement('table'); //<table> elem létrehozása
+document.body.appendChild(table); //hozzáfűzzük a dokumentum tőrzséhez
 
-// fejl�c r�sz l�trehoz�sa
-const thead = document.createElement('thead');
-table.appendChild(thead);
+//táblázat fejlécének létrehozása
+const thead = document.createElement('thead'); //<thead> elem létrehozása
+table.appendChild(thead); //hozzáfűzzük a table-höz
 
-// els? sor (fejl�csor) hozz�ad�sa a thead-hez
-const tr1 = document.createElement('tr');
-thead.appendChild(tr1);
+//thead-en belül egy sor létrehozása
+const tr1 = document.createElement('tr'); //<tr> elem létrehozása
+thead.appendChild(tr1); //hozzáfűzzük a thead-hez
 
-// fejl�c oszlopai
-createCellElement("th", "Szerz? neve", tr1);
-createCellElement("th", "Korszak", tr1);
-const th3 = createCellElement("th", "Szerelmek", tr1);
-th3.colSpan = 2; // a ?Szerelmek? k�t oszlopot fog �ssze
+//fejléc celláinak (th) létrehozása függvény segítségével
+createCellElement("th", "Szerző neve", tr1); //első oszlop
+createCellElement("th", "Korszak", tr1); //második oszlop
+const th3 = createCellElement("th", "Szerelmek", tr1); //harmadik oszlop (összevont fejléchez)
+th3.colSpan = 2; //"Szerelmek" oszlop két oszlopnyi helyet foglal, ezeket összevonja
 
-// t�rzs (tbody) l�trehoz�sa
-const tbody = document.createElement('tbody');
-table.appendChild(tbody);
+//táblázat törzsének (tbody) létrehozása
+const tbody = document.createElement('tbody'); //<tbody> elem létrehozása
+table.appendChild(tbody); //hozzáfűzzük a table-höz
 
-// a t�mb adatainak bej�r�sa, minden szerz?h�z �j sor l�trehoz�sa
+//tömb elemeinek (arr) feldolgozása
 for (const a of arr) {
+    //minden szerzőhöz létrehozunk egy új sort (tr)
     const tr2 = document.createElement('tr');
     tbody.appendChild(tr2);
 
-    // n�v �s korszak mindig megjelenik
-    createCellElement("td", a.name, tr2);
-    createCellElement("td", a.time, tr2);
+    //szerző neve és korszaka mindig megjelenik
+    createCellElement("td", a.name, tr2); //első cella: név
+    createCellElement("td", a.time, tr2); //második cella: korszak
 
-    // els? szerelem oszlop
+    //első szerelmének cellája
     const td3 = createCellElement("td", a.love1, tr2);
-
-    // ha van m�sodik szerelem, k�l�n cell�ban jelenik meg
-    if (a.love2) {
+    
+    //ha van második szerelme (love2), létrehozunk egy új cellát
+    if(a.love2) {
         createCellElement("td", a.love2, tr2);
-    } else {
-        // ha nincs, az els? szerelem cella k�t oszlopot foglal
+    }else {
+        //ha nincs második szerelme, az első cella két oszlopot foglaljon el
         td3.colSpan = 2;
     }
 }
 
 /**
-* Seg�df�ggv�ny cell�k l�trehoz�s�hoz �s a megfelel? sorhoz ad�s�hoz.
-*
-* @param {string} cellType - a cella t�pusa (th vagy td)
-* @param {string} cellContent - a cella sz�vege
-* @param {HTMLTableRowElement} cellRow - a sor, amihez a cell�t hozz�adjuk
-* @returns {HTMLTableCellElement} - visszaadja a cell�t, ha k�s?bb m�dos�tani kell (pl. colSpan)
+* létrehoz egy táblázatcella elemet és hozzáfűzi egy sorhoz
+
+* @param {string} cellType - cella típusa: th/td
+* @param {string} cellContent - a cella szövege
+* @param {HTMLTableRowElement} cellRow - ehhez a sorhoz fogja hozzáadni
+* @returns {HTMLTableCellElement} - td, abban az esetben, ha olyan cellát hozunk létre a függvényünkkel, amelynek később állítjuk a colSpan értékét
 */
 function createCellElement(cellType, cellContent, cellRow) {
-    const cell = document.createElement(cellType);
-    cell.innerText = cellContent;
-    cellRow.appendChild(cell);
-    return cell;
+    const cell = document.createElement(cellType); //cella létrehozása, td-t vagy th-t akarunk, string
+    cell.innerText = cellContent; //cella szövegét tartalmazza, amit beállítunk az innerText-nek, string
+    cellRow.appendChild(cell); //hozzáadjuk a megadott sorhoz, táblázat sor értékét tartalmazó változó lesz, típusai: HTMLTableRowElement vagy HTMLElement
+    return cell; //visszaadjuk a cellát, hogy később hivatkozhassunk rá
 }
+//A függvény törzsében létrehozunk egy html elemet az első paraméter alapján, majd beállítjuk a html elem "a" szövegének a második paraméter értékét, végül a 3. paraméter-hez hozzáfűzzük az itt létrehozott elemet.
 
-// =======================
-// ?rlap l�trehoz�sa
-// =======================
+//Házi feladat
+//form létrehozása
+const form = document.createElement('form'); //<form> elem létrehozása
+form.id = 'form_js'; //id beállítása
+document.body.appendChild(form); //hozzáfűzés a dokumentum törzséhez
 
-// form elem fel�p�t�se
-const form = document.createElement('form');
-form.id = 'form_js';
-document.body.appendChild(form);
+//h2 elem létrehozása
+const h2 = document.createElement('h2'); //<h2> elem létrehozása
+h2.innerText = 'Javascript form'; //innerText beállítása
+form.appendChild(h2); //hozzáfűzés a form-hoz
 
-// c�m hozz�ad�sa a form tetej�re
-const h2 = document.createElement('h2');
-h2.innerText = 'Javascript form';
-form.appendChild(h2);
-
+//segédfüggvény
 /**
- * Seg�df�ggv�ny input mez? + c�mke l�trehoz�s�ra
- * @param {string} labelText - a label felirata
- * @param {string} inputType - az input t�pusa (pl. text)
- * @param {string} inputId - az input azonos�t�ja
- * @param {HTMLElement} forms - az elem, amihez hozz�adjuk (jelen esetben a form)
+ * @param {string} labelText - label szövege
+ * @param {string} inputType - input típusa (pl. text)
+ * @param {string} inputId - input id-ja
+ * @param {HTMLElement} forms - amihez hozzáadjuk
  */
 function createInputField(labelText, inputType, inputId, forms) {
-    // label l�trehoz�sa
-    const label = document.createElement('label');
-    label.htmlFor = inputId;
-    label.innerText = labelText;
-    forms.appendChild(label);
+    const label = document.createElement('label'); //<label> elem létrehozása
+    label.htmlFor = inputId; //label for attribútuma az input id-járe mutat
+    label.innerText = labelText; //label szövegének beállítása
+    forms.appendChild(label); //label hozzáadása a form-hoz
 
-    // sort�r�s
-    forms.appendChild(document.createElement('br'));
+    const br1 = document.createElement('br'); //<br> elem létrehozása
+    forms.appendChild(br1); //1. sortörés beszúrása
 
-    // input mez? l�trehoz�sa
-    const input = document.createElement('input');
-    input.type = inputType;
-    input.id = inputId;
-    input.name = inputId;
-    forms.appendChild(input);
+    const input = document.createElement('input'); //<input> mező létrehozása
+    input.type = inputType; //input típusának beállítása (text)
+    input.id = inputId; //input id-jának beállítása (id)
+    input.name = inputId; //input id-jának beállírása (name)
+    forms.appendChild(input); //input hozzáadása form-hoz
 
-    // extra sort�r�sek a rendezett megjelen�shez
-    forms.appendChild(document.createElement('br'));
-    forms.appendChild(document.createElement('br'));
+    const br2 = document.createElement('br');
+    forms.appendChild(br2); //2. sortörés beszúrása
+
+    const br3 = document.createElement('br');
+    forms.appendChild(br3); //3. sortörés beszúrása
 }
 
-// input mez?k l�trehoz�sa a seg�df�ggv�nnyel
-createInputField('K�lt? neve:', 'text', 'kolto_nev', form);
-createInputField('Korszak:', 'text', 'korszak', form);
-createInputField('Szerelme:', 'text', 'szerelem1', form);
-createInputField('Szerelme:', 'text', 'szerelem2', form);
+//input mezők létrehozása segédfüggvénnyel
+createInputField('Költő neve:', 'text', 'kolto_nev', form); //elso input
+createInputField('Korszak:', 'text', 'korszak', form); //második input
+createInputField('Szerelme:', 'text', 'szerelem1', form); //harmadik input
+createInputField('Szerelme:', 'text', 'szerelem2', form); //negyedik input
 
-// gomb hozz�ad�sa az ?rlaphoz
-const button = document.createElement('button');
-button.innerText = 'Hozz�ad�s';
-form.appendChild(button);
+//gomb létrehozása
+const button = document.createElement('button'); //<button> elem létrehozása
+button.innerText = 'Hozzáadás'; //gomb felirata
+form.appendChild(button); //gomb hozzáadása a form-hoz

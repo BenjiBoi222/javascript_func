@@ -1,116 +1,44 @@
-console.warn("Work-Rihanna");
-let num = 1;
+//használható változók: let, const
+//const: értéke nem változtatható (állandó)
+//let: értéke később megváltoztatható
 
+//változó deklarálás JSDoc-kal
 /**
  * @type {string}
  */
-let abc = "abcdefg";
-console.log(abc);
+const word = "bamboozle" //nem változtatható érték
+console.log(word) //konzolra: bamboozle
 
-
+//tömb deklarálás
 /**
- * @type {string[]}
+ * @type {string[]} - stringeket tartalmazó tömb
  */
-const block = ["Józsi", "Béla", "Feri"]
-console.log(block);
-console.log("-----");
-for(let i = 0; i < block.length; i++){
-    console.log(block[i])
+const tomb = ["a", "b"] //két elemű tömb létrehozása
+console.log(tomb[0]) //első elemet kiírja "a"
+
+//tömb bejárása for ciklussal (index alapján)
+for(let i = 0; i < tomb.length; i++){
+    console.log(tomb[i]) //kiírja: "a", majd "b"
 }
-console.log("-----");
-for (const a of block) {
-    console.log(a)
+
+//tömb bejárása for...of ciklussal (értékek alapján)
+for(const a of tomb){
+    console.log(a) //kiírja: "a", majd "b"
 }
-console.log("-----");
-for (const key in block){
-    console.log(`${key}:${block[key]}`);
+
+//tömb bejárása for...in ciklussal (indexek alapján)
+//"for...in" a kulcsokat (indexeket) adja vissza, ezért a tömb elemeit a kulcs segítségével kell lekérni
+for(const key in tomb){
+    console.log(`${key}:${tomb[key]}`) //kiírja: "0:a" és "1:b"
 }
-console.log("-----");
+
+//objektum deklarálása (kulcs-érték párokkal)
 /**
- * @type {{nev:string,age:int}}
+ * @type {{nev:string, age:number}} - ez egy objektum, aminek két tulajdonsága van: név: string, age: number
  */
 const a = {
-    nev : `Benji`,
-    age : 17  
-};
-console.log(a);
-
-
-
-/**
-* @type {{name:string, time:string, love1:string, love2?:string}[]}
-*/
-
-const arr = [
-    {
-        name: `Balassi Bálint`,
-        time: `reformáció`,
-        love1: `Losonczy Anna`,
-        love2: `Dobó Krisztina`
-    },
-    {
-        name: `Csokonai Vitéz Mihály`,
-        time: `felvilágosodás`,
-        love1: `Vajda Juliána`
-    },
-    {
-        name: `Petőfi Sándor`,
-        time: `magyar romantika`,
-        love1: `Mednyanszky Berta`,
-        love2: `Szendrey Júlia`
-    },
-    {
-        name: `Ady Endre`,
-        time: `20. század`,
-        love1: `Léda`,
-        love2: `Csinszka`
-    }
-]
-
-const table = document.createElement('table');
-document.body.appendChild(table);
-
-const thead = document.createElement('thead');
-table.appendChild(thead);
-
-const tr1 = document.createElement('tr');
-thead.appendChild(tr1);
-
-createCellElement("th", "Szerző neve", tr1);
-createCellElement("th", "Korszak", tr1);
-createCellElement("th", "Szerelmek", tr1).colSpan = 2;;
-
-
-const tbody = document.createElement('tbody');
-table.appendChild(tbody);
-
-for (const ar of arr) {
-    const tr2 = document.createElement('tr');
-    tbody.appendChild(tr2);
-
-    createCellElement("td", ar.name, tr2);
-    createCellElement("td", ar.time, tr2);
-    const td3 = createCellElement("td", ar.love1, tr2);
-    if(ar.love2) {
-        /*
-        const td4 = document.createElement('td');
-        td4.innerText = ar.love2;
-        tr2.appendChild(td4);
-        */
-        createCellElement("td", ar.love2, tr2);
-    }else td3.colSpan = 2;
+    nev : 'Dorka', //szöveges tulajdonság
+    age : 17 //numerikus tulajdonság
 }
-
-/**
-* létrehoz egy táblázatcella elemet és hozzáfűzi egy sorhoz
-* @param {string} cellType - cella típusa: th/td
-* @param {string} cellContent - a cella szövege
-* @param {HTMLTableRowElement} cellRow - ehhez a sorhoz fogja hozzáadni
-* @returns {HTMLTableCellElement} - td
-*/
-function createCellElement(cellType, cellContent, cellRow) {
-    const type = document.createElement(cellType);
-    type.innerText = cellContent;
-    cellRow.appendChild(type);
-    return type;
-}
+//objektum kiiratása konzolra
+console.log(a) // {név: "Dorka", age: 17}

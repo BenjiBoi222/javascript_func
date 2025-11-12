@@ -3,8 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
     <title>Groteszk</title>
-    <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
@@ -17,7 +17,7 @@
                 <th>Mű</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="tbodyID">
             <tr>
                 <td rowspan="2">Orosz</td>
                 <td>Gogol</td>
@@ -50,19 +50,41 @@
     </table>
 
     <div id="gyakorlas">
-
-        <button>gomb1</button>
-        <button>gomb2</button>
-        <button>gomb3</button>
-
+        <button>1</button>
+        <button>2</button>
+        <button>3</button>
         <p>Gyakorló bekezdés</p>
     </div>
-    
     <a>Gyakorló link</a>
+    <br><br><br><br><br><br><br><br>
+
+
+    <form id="htmlform">
+        <label for="nemzetiseg">Nemzetiség:</label><br>
+        <input type="text" id="nemzetiseg" name="nemzetiseg"><br><br>
+
+        <label for="szerzo1">Szerző:</label><br>
+        <input type="text" id="szerzo1" name="szerzo1"><br><br>
+
+        <label for="mu1">Mű:</label><br>
+        <input type="text" id="mu1" name="mu1"><br><br>
+
+        <label for="szerzo2">Másik Szerző:</label><br>
+        <input type="text" id="szerzo2" name="szerzo2"><br><br>
+
+        <label for="mu2">Mű:</label><br>
+        <input type="text" id="mu2" name="mu2"><br><br>
+
+        <button>Hozzáadás</button>
+        <br><br><br><br><br><br><br><br>
+    </form>
+
+
 
 
 
     <script src="kitero.js"></script>
+    <script src="hf.js"></script>
 </body>
 
 </html>

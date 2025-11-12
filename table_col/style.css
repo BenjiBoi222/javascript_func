@@ -1,33 +1,25 @@
-table, thead, tr,  td{
-    border: 1px solid black;
-    border-collapse: collapse;
-    text-align: center;
-    vertical-align: middle;
-}
-/*
-table, thead + tr > th , tr, td{
+table, thead, tr, th, td {
     border: 1px solid black;
     border-collapse: collapse;
     text-align: center;
 }
-*/
-th{
-    background-color: lightslategray;  
+
+th {
+    background-color:lightslategrey ;
 }
 
-table table ~ tbody > tr{
-    background-color: beige;
+table thead~tbody>tr{
+    background-color: rgb(117, 88, 141);
 }
 
+table tbody>tr{
+    background-color:cadetblue ;
+}
+
+tbody tr:nth-child(2n) {
+    background-color: cornsilk;
+}
 
 tbody tr:hover{
-    background-color: red !important;
-}
-
-
-table tbody > tr:nth-child(odd){
-    background-color: cornsilk; 
-}
-table tbody > tr:nth-child(even){
-    background-color: cadetblue; 
+    background-color: rgb(173, 86, 83);
 }
