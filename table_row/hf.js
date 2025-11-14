@@ -1,7 +1,12 @@
 /**
- * @type {{nationality:string, author1:string, author2?:string, literarypiece1:string, literarypiece2?:string}[]}
+ * @typedef {{nationality:string, author1:string, author2?:string, literarypiece1:string, literarypiece2?:string}} CountryWriters
  */
-
+ 
+ 
+/**
+ * @type {CountryWriters[]}
+ */
+ 
 const arr = [
     {
         nationality: 'Orosz',
@@ -28,208 +33,85 @@ const arr = [
         literarypiece1: 'A fizikusok',
     }
 ]
-
+ 
 const table = document.createElement('table');
 document.body.appendChild(table);
+ 
 
-const thead = document.createElement('thead');
-table.appendChild(thead);
-
-const tr1 = document.createElement('tr');
-thead.appendChild(tr1);
-
+ 
 const a = ['Nemzetiség', 'Szerző', 'Mű'];
-for(let i of a) {
-    const th = document.createElement('th');
-    tr1.appendChild(th);
-    th.innerText = i;
-}
-
+generateHeader(table,a)
+ 
 const tbody = document.createElement('tbody');
 tbody.id = 'tablebody';
 table.appendChild(tbody);
-
+ 
+//tbody létrehozás
 /**
- * @param {{nationality:string, author1:string, author2?:string, literarypiece1:string, literarypiece2?:string}[]}
+ * @param {HTMLTableSection} tablebody
+ * @param {CountryWriters[]} CountryWriters
  */
-function renderTableBody(array) {
-    const tablebody = document.getElementById('tablebody');
-    tablebody.innerHTML = "";
 
-    for(let a of array) {
+function renderTableRow(tablebody, CountryWriters) {
     const tr2 = document.createElement('tr');
-    tbody.appendChild(tr2);
+    tablebody.appendChild(tr2);
+ console.log(CountryWriters)
+    const tr2_td1 = createCell("td",tr2,CountryWriters.nationality);
 
-    const tr2_td1 = document.createElement('td');
     tr2_td1.addEventListener("click",function(e){
         /**
          * @type {HTMLTableCellElement}
          */
+        
         const valtozo = e.target;
-
+ 
         const tr = valtozo.parentElement;
         const tbody = tr.parentElement;
         const alrmarked = tbody.querySelector('.marked');
-
+ 
         if (alrmarked !== null) {
             alrmarked.classList.remove('marked');
         }
-
+ 
         valtozo.classList.add("marked");
     });
-    tr2_td1.innerText = a.nationality;
-    tr2.appendChild(tr2_td1);
 
-    const tr2_td2 = document.createElement('td');
-    tr2_td2.innerText = a.author1;
-    tr2.appendChild(tr2_td2);
+    
+    createCell("td",tr2,CountryWriters.author1)
+    createCell("td",tr2,CountryWriters.literarypiece1)
 
-    const tr2_td3 = document.createElement('td');
-    tr2_td3.innerText = a.literarypiece1;
-    tr2.appendChild(tr2_td3);
-
-    if (a.author2 != undefined && a.literarypiece2 != undefined) {
+    if (CountryWriters.author2 != undefined && CountryWriters.literarypiece2 != undefined) {
         const tr3 = document.createElement('tr');
         tablebody.appendChild(tr3);
-
-        const tr3_td2 = document.createElement('td');
-        tr3_td2.innerText = a.author2;
-        tr3.appendChild(tr3_td2);
-
-        const tr3_td3 = document.createElement('td');
-        tr3_td3.innerText = a.literarypiece2;
-        tr3.appendChild(tr3_td3);
-
+ 
+        createCell("td",tr3,CountryWriters.author2)
+        createCell("td",tr3,CountryWriters.literarypiece2)
+ 
         tr2_td1.rowSpan = 2;
     }
 }
-}
-renderTableBody(arr);
-
-
+ 
+ 
+ 
+ 
+ 
 const formElement = document.getElementById("htmlform");
-formElement.addEventListener("submit", function(e){
-    //alapértelmezett működés egy get-et küld
-    e.preventDefault(); //alapértelmezett működést gátolja
-    /**
-     * @type {HTMLFormElement}
-     */
-    const event = e.target;
-
-    /** @type {HTMLInputElement} */
-    const nemzetiseg = event.querySelector("#nemzetiseg");
-    /** @type {string} */
-    const nemzetisegvalue = nemzetiseg.value;
-
-    /** @type {HTMLInputElement} */
-    const szerzo1 = event.querySelector("#szerzo1");
-    /** @type {string} */
-    const szerzo1value = szerzo1.value;
-
-    /** @type {HTMLInputElement} */
-    const szerzo2 = event.querySelector("#szerzo2");
-    /** @type {string} */
-    const szerzo2value = szerzo2.value;
-
-    /** @type {HTMLInputElement}*/
-    const mu1 = event.querySelector("#mu1");
-    /** @type {string} */
-    const mu1value = mu1.value;
-
-    /** @type {HTMLInputElement} */
-    const mu2 = event.querySelector("#mu2");
-    /** @type {string} */
-    const mu2value = mu2.value;
-
-    /** 
-     * @type {{nationality:string, author1:string, author2?:string, literarypiece1:string, literarypiece2?:string}} 
-     */
-    const obj = {}
-    obj.nationality = nemzetisegvalue;
-    obj.author1 = szerzo1value;
-    obj.author2 = szerzo2value;
-    obj.literarypiece1 = mu1value;
-    obj.literarypiece2 = mu2value;
-
-    const tbody = document.getElementById("tbodyID");
-
-    const tr2 = document.createElement('tr');
-    tbody.appendChild(tr2);
-
-    const tr2_td1 = document.createElement('td');
-    tr2_td1.innerText = obj.nationality;
-    tr2.appendChild(tr2_td1);
-
-    const tr2_td2 = document.createElement('td');
-    tr2_td2.innerText = obj.author1;
-    tr2.appendChild(tr2_td2);
-
-    const tr2_td3 = document.createElement('td');
-    tr2_td3.innerText = obj.literarypiece1;
-    tr2.appendChild(tr2_td3);
-
-    if (obj.author2 && obj.literarypiece2) {
-        const tr3 = document.createElement('tr');
-        tbody.appendChild(tr3);
-
-        const tr3_td2 = document.createElement('td');
-        tr3_td2.innerText = obj.author2; 
-        tr3.appendChild(tr3_td2);
-
-        const tr3_td3 = document.createElement('td');
-        tr3_td3.innerText = obj.literarypiece2;
-        tr3.appendChild(tr3_td3);
-
-        tr2_td1.rowSpan = 2;
-    }
-})
-//=============Small spacing=============
-    const br0 = document.createElement('br');
-    document.body.appendChild(br0);
-    document.body.appendChild(br0);
-    document.body.appendChild(br0);
-    document.body.appendChild(br0);
-//=======================================
-
-
-//===FORM IMPLEMENTING===    
-
-
-/**
- * @param {string} labelText - label szövege
- * @param {string} inputId - id-ja az inputnak
- * @param {HTMLElement} forms - amihelyhez hozzáadjuk
- */
-function createFormElement(forms, id, labelContent) {
-    const label = document.createElement('label');
-    label.htmlFor = id;
-    label.innerText = labelContent;
-    forms.appendChild(label);
-
-    const br1 = document.createElement('br');
-    forms.appendChild(br1);
-
-    const input = document.createElement('input');
-    input.id = id;
-    forms.appendChild(input);
-
-    const br2 = document.createElement('br');
-    forms.appendChild(br2);
-
-    const br3 = document.createElement('br');
-    forms.appendChild(br3);
-}
-
+formElement.addEventListener("submit", htmlFormEventListener)
+ 
+//====FORM IMPLEMENTING====
+ 
+ 
+ 
 const form = document.createElement('form');
 form.id = 'htmlform';
 document.body.appendChild(form);
-
+ 
 createFormElement(form, 'nemzetiseg', 'Nemzetiség:');
 createFormElement(form, 'szerzo1', 'Szerző:');
 createFormElement(form, 'mu1', 'Mű:');
 createFormElement(form, 'szerzo2', 'Másik Szerző:');
 createFormElement(form, 'mu2', 'Mű:');
-
+ 
 form.addEventListener("submit", function(e){
     //alapértelmezett működés egy get-et küld
     e.preventDefault(); //alapértelmezett működést gátolja
@@ -237,51 +119,176 @@ form.addEventListener("submit", function(e){
      * @type {HTMLFormElement}
      */
     const event = e.target;
-
+ 
     /** @type {HTMLInputElement} */
     const nemzetiseg = event.querySelector("#nemzetiseg");
     /** @type {string} */
     const nemzetisegvalue = nemzetiseg.value;
-
+ 
     /** @type {HTMLInputElement} */
     const szerzo1 = event.querySelector("#szerzo1");
     /** @type {string} */
     const szerzo1value = szerzo1.value;
-
+ 
     /** @type {HTMLInputElement} */
     const szerzo2 = event.querySelector("#szerzo2");
     /** @type {string} */
     const szerzo2value = szerzo2.value;
-
+ 
     /** @type {HTMLInputElement}*/
     const mu1 = event.querySelector("#mu1");
     /** @type {string} */
     const mu1value = mu1.value;
-
+ 
     /** @type {HTMLInputElement} */
     const mu2 = event.querySelector("#mu2");
     /** @type {string} */
     const mu2value = mu2.value;
-
-    /** 
-     * @type {{nationality:string, author1:string, author2?:string, literarypiece1:string, literarypiece2?:string}} 
+ 
+    /**
+     * @type {CountryWriters[]}
      */
     const obj2 = {}
     obj2.nationality = nemzetisegvalue;
     obj2.author1 = szerzo1value;
     obj2.literarypiece1 = mu1value;
-
-    if (szerzo2value && mu2value) 
-    {
-    obj2.author2 = szerzo2value;
-    obj2.literarypiece2 = mu2value;
+ 
+    if (szerzo2value && mu2value) {
+        obj2.author2 = szerzo2value;
+        obj2.literarypiece2 = mu2value;
     }
-
-
+ 
     arr.push(obj2);
     renderTableBody(arr);
 })
-
+ 
 const button = document.createElement('button');
 button.innerText = 'Hozzáadás';
 form.appendChild(button);
+ 
+ 
+/**
+ * @param {CountryWriters[]}
+ */
+function renderTableBody(array) {
+    const tablebody = document.getElementById('tablebody');
+    tablebody.innerHTML = "";
+ 
+    for(let a of array) {
+        renderTableRow(tablebody, a);
+    }
+}
+renderTableBody(arr);
+ 
+/**
+ * @param {string} labelText - label szövege
+ * @param {string} inputId - id inputja
+ * @param {HTMLElement} forms - amihelyhez hozzáadjuk
+ */
+function createFormElement(forms, id, labelContent) {
+    const label = document.createElement('label');
+    label.htmlFor = id;
+    label.innerText = labelContent;
+    forms.appendChild(label);
+ 
+    const br1 = document.createElement('br');
+    forms.appendChild(br1);
+ 
+    const input = document.createElement('input');
+    input.id = id;
+    forms.appendChild(input);
+ 
+    const br2 = document.createElement('br');
+    forms.appendChild(br2);
+ 
+    const br3 = document.createElement('br');
+    forms.appendChild(br3);
+}
+
+/**
+ * @param {'td'|'td'} cellType 
+ * @param {*} ParentRow 
+ */
+function createCell(cellType, ParentRow, cellContent)
+{
+    const cell = document.createElement(cellType);
+    cell.innerText = cellContent;
+    ParentRow.appendChild(cell);
+    return cell;
+}
+
+function generateHeader(table,headerList)
+{
+    const thead = document.createElement('thead');
+    table.appendChild(thead);
+    const tr = document.createElement('tr');
+    thead.appendChild(tr);
+    for(let iterater of headerList){
+        createCell("th",tr,iterater);
+    }
+    return thead;
+}
+
+function htmlFormEventListener(e){
+    //alapértelmezett működés egy get-et küld
+    e.preventDefault(); //alapértelmezett működést gátolja
+    /**
+     * @type {HTMLFormElement}
+     */
+    const event = e.target;
+ 
+    /** @type {HTMLInputElement} */
+    const nemzetiseg = event.querySelector("#nemzetiseg");
+    /** @type {string} */
+    const nemzetisegvalue = nemzetiseg.value;
+ 
+    /** @type {HTMLInputElement} */
+    const szerzo1 = event.querySelector("#szerzo1");
+    /** @type {string} */
+    const szerzo1value = szerzo1.value;
+ 
+    /** @type {HTMLInputElement} */
+    const szerzo2 = event.querySelector("#szerzo2");
+    /** @type {string} */
+    const szerzo2value = szerzo2.value;
+ 
+    /** @type {HTMLInputElement}*/
+    const mu1 = event.querySelector("#mu1");
+    /** @type {string} */
+    const mu1value = mu1.value;
+ 
+    /** @type {HTMLInputElement} */
+    const mu2 = event.querySelector("#mu2");
+    /** @type {string} */
+    const mu2value = mu2.value;
+ 
+    /**
+     * @type {CountryWriters[]}
+     */
+    const obj = {}
+    obj.nationality = nemzetisegvalue;
+    obj.author1 = szerzo1value;
+    obj.author2 = szerzo2value;
+    obj.literarypiece1 = mu1value;
+    obj.literarypiece2 = mu2value;
+ 
+    const tbody = document.getElementById("tablebody1");
+ 
+    const tr2 = document.createElement('tr');
+    tbody.appendChild(tr2);
+ 
+    const tr2_td1 = createCell("td",tr2,obj.nationality);
+    createCell("td",tr2,obj.author1);
+    createCell("td",tr2,obj.literarypiece1);
+
+ 
+    if (obj.author2 && obj.literarypiece2) {
+        const tr3 = document.createElement('tr');
+        tbody.appendChild(tr3);
+ 
+        createCell("td",tr3,author2)
+        createCell("td",tr3,literarypiece2)
+ 
+        tr2_td1.rowSpan = 2;
+    }
+}

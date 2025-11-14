@@ -128,6 +128,7 @@ th2.innerText = "Korszak"
 trHead.appendChild(th2)
 const th3 = document.createElement("th")
 th3.innerText = "Tudós"
+th3.colSpan = 2
 trHead.appendChild(th3)
 
 const tbody = document.createElement("tbody")
@@ -149,7 +150,7 @@ for (const i of arr){
     td3.innerText = i.scientist1
     tr.appendChild(td3)
 
-    if(i.scientist2 !== undefined){
+    if(i.scientist2){
         const td4 = document.createElement('td')
         td4.innerText = i.scientist2
         tr.appendChild(td4)
