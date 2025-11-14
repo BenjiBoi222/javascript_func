@@ -1,12 +1,3 @@
-/**
- * @typedef {{nationality:string, author1:string, author2?:string, literarypiece1:string, literarypiece2?:string}} CountryWriters
- */
- 
- 
-/**
- * @type {CountryWriters[]}
- */
- 
 const arr = [
     {
         nationality: 'Orosz',
@@ -33,26 +24,6 @@ const arr = [
         literarypiece1: 'A fizikusok',
     }
 ]
- 
-const table = document.createElement('table');
-document.body.appendChild(table);
- 
-
- 
-const a = ['Nemzetiség', 'Szerző', 'Mű'];
-generateHeader(table,a)
- 
-const tbody = document.createElement('tbody');
-tbody.id = 'tablebody';
-table.appendChild(tbody);
- 
-//tbody létrehozás
-/**
- * @param {HTMLTableSection} tablebody
- * @param {CountryWriters[]} CountryWriters
- */
-
-
 
 
 function renderTableRow(tablebody, CountryWriters) {
@@ -97,6 +68,8 @@ function renderTableRow(tablebody, CountryWriters) {
  
  
  
+ 
+const formElement = document.getElementById("htmlform");
  
 //====FORM IMPLEMENTING====
  
