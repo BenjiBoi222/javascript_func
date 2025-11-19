@@ -1,270 +1,224 @@
-const arr = [
-    {
-        nationality: 'Orosz',
-        author1: 'Gogol',
-        literarypiece1: 'A köpönyeg',
-        author2: 'Csehov',
-        literarypiece2: 'A csinovnyik halála',
-    },
-    {
-        nationality: 'Cseh',
-        author1: 'Franz Kafka',
-        literarypiece1: 'Az átváltozás',
-    },
-    {
-        nationality: 'Magyar',
-        author1: 'Örkény István',
-        literarypiece1: 'gyperces Novellák',
-        author2: 'József Attila',
-        literarypiece2: 'Klárisok',
-    },
-    {
-        nationality: 'Svácj',
-        author1: 'Friedrich Dürrenmatt',
-        literarypiece1: 'A fizikusok',
-    }
-]
-
-
-function renderTableRow(tablebody, CountryWriters) {
-    const tr2 = document.createElement('tr');
-    tablebody.appendChild(tr2);
- console.log(CountryWriters)
-    const tr2_td1 = createCell("td",tr2,CountryWriters.nationality);
-
-    tr2_td1.addEventListener("click",function(e){
-        /**
-         * @type {HTMLTableCellElement}
-         */
-        
-        const valtozo = e.target;
- 
-        const tr = valtozo.parentElement;
-        const tbody = tr.parentElement;
-        const alrmarked = tbody.querySelector('.marked');
- 
-        if (alrmarked !== null) {
-            alrmarked.classList.remove('marked');
-        }
- 
-        valtozo.classList.add("marked");
-    });
-
-    
-    createCell("td",tr2,CountryWriters.author1)
-    createCell("td",tr2,CountryWriters.literarypiece1)
-
-    if (CountryWriters.author2 != undefined && CountryWriters.literarypiece2 != undefined) {
-        const tr3 = document.createElement('tr');
-        tablebody.appendChild(tr3);
- 
-        createCell("td",tr3,CountryWriters.author2)
-        createCell("td",tr3,CountryWriters.literarypiece2)
- 
-        tr2_td1.rowSpan = 2;
-    }
-}
- 
- 
- 
- 
- 
-const formElement = document.getElementById("htmlform");
- 
-//====FORM IMPLEMENTING====
- 
- 
- 
-const form = document.createElement('form');
-form.id = 'htmlform';
-document.body.appendChild(form);
- 
-createFormElement(form, 'nemzetiseg', 'Nemzetiség:');
-createFormElement(form, 'szerzo1', 'Szerző:');
-createFormElement(form, 'mu1', 'Mű:');
-createFormElement(form, 'szerzo2', 'Másik Szerző:');
-createFormElement(form, 'mu2', 'Mű:');
- 
-form.addEventListener("submit", function(e){
-    //alapértelmezett működés egy get-et küld
-    e.preventDefault(); //alapértelmezett működést gátolja
-    /**
-     * @type {HTMLFormElement}
-     */
-    const event = e.target;
-
-    /** @type {HTMLInputElement} */
-    const nemzetiseg = event.querySelector("#nemzetiseg");
-    /** @type {string} */
-    const nemzetisegvalue = nemzetiseg.value;
-
-    /** @type {HTMLInputElement} */
-    const szerzo1 = event.querySelector("#szerzo1");
-    /** @type {string} */
-    const szerzo1value = szerzo1.value;
-
-    /** @type {HTMLInputElement} */
-    const szerzo2 = event.querySelector("#szerzo2");
-    /** @type {string} */
-    const szerzo2value = szerzo2.value;
-
-    /** @type {HTMLInputElement}*/
-    const mu1 = event.querySelector("#mu1");
-    /** @type {string} */
-    const mu1value = mu1.value;
-
-    /** @type {HTMLInputElement} */
-    const mu2 = event.querySelector("#mu2");
-    /** @type {string} */
-    const mu2value = mu2.value;
-
-    /**
-     * @type {CountryWriters[]}
-     */
-    const obj2 = {}
-    obj2.nationality = nemzetisegvalue;
-    obj2.author1 = szerzo1value;
-    obj2.literarypiece1 = mu1value;
-
-    if (szerzo2value && mu2value) {
-        obj2.author2 = szerzo2value;
-        obj2.literarypiece2 = mu2value;
-    }
-
-    arr.push(obj2);
-    renderTableBody(arr);
-})
- 
-const button = document.createElement('button');
-button.innerText = 'Hozzáadás';
-form.appendChild(button);
- 
- 
 /**
- * @param {CountryWriters[]}
+ * Ez az adattipus irja le a tablazat egy elem tipusat.
+ * A masodik szerzo es a masodik mu opcionálisak.
+ * @typedef {{
+ *   nationality:string,
+ *   author1:string,
+ *   author2?:string,
+ *   literarypiece1:string,
+ *   literarypiece2?:string
+ * }} CountryWriters
  */
-function renderTableBody(array) {
-    const tablebody = document.getElementById('tablebody');
-    tablebody.innerHTML = "";
- 
-    for(let a of array) {
-        renderTableRow(tablebody, a);
-    }
-}
-renderTableBody(arr);
- 
+
 /**
- * @param {string} labelText - label szövege
- * @param {string} inputId - id inputja
- * @param {HTMLElement} forms - amihelyhez hozzáadjuk
+ * Ez a form generalasi mezotipus (id + label).
+ * @typedef {{
+ *   id:string,
+ *   label:string
+ * }} FormField
  */
-function createFormElement(forms, id, labelContent) {
-    const label = document.createElement('label');
-    label.htmlFor = id;
-    label.innerText = labelContent;
-    forms.appendChild(label);
- 
-    const br1 = document.createElement('br');
-    forms.appendChild(br1);
- 
-    const input = document.createElement('input');
-    input.id = id;
-    forms.appendChild(input);
- 
-    const br2 = document.createElement('br');
-    forms.appendChild(br2);
- 
-    const br3 = document.createElement('br');
-    forms.appendChild(br3);
+
+/**
+ * A cella tipusa td vagy th lehet.
+ * @typedef {'td'|'th'} CellType
+ */
+
+/**
+ * Egy tabla cellat hoz letre, majd visszaadja azt.
+ */
+function cell_letrehoz(celltype, parentrow, content) {
+    const c = document.createElement(celltype);
+    c.innerText = content;
+    parentrow.appendChild(c);
+    return c;
 }
 
 /**
- * @param {'td'|'td'} cellType 
- * @param {*} ParentRow 
+ * Letrehozza a tablazat fejlecet egy sorral.
  */
-function createCell(cellType, ParentRow, cellContent)
-{
-    const cell = document.createElement(cellType);
-    cell.innerText = cellContent;
-    ParentRow.appendChild(cell);
-    return cell;
-}
-
-function generateHeader(table,headerList)
-{
+function fejlec_letrehoz(table, headerek) {
     const thead = document.createElement('thead');
     table.appendChild(thead);
+
     const tr = document.createElement('tr');
     thead.appendChild(tr);
-    for(let iterater of headerList){
-        createCell("th",tr,iterater);
+
+    for (let i = 0; i < headerek.length; i++) {
+        cell_letrehoz('th', tr, headerek[i]);
     }
+
     return thead;
 }
 
-function htmlFormEventListener(e){
-    //alapértelmezett működés egy get-et küld
-    e.preventDefault(); //alapértelmezett működést gátolja
-    /**
-     * @type {HTMLFormElement}
-     */
-    const event = e.target;
- 
-    /** @type {HTMLInputElement} */
-    const nemzetiseg = event.querySelector("#nemzetiseg");
-    /** @type {string} */
-    const nemzetisegvalue = nemzetiseg.value;
- 
-    /** @type {HTMLInputElement} */
-    const szerzo1 = event.querySelector("#szerzo1");
-    /** @type {string} */
-    const szerzo1value = szerzo1.value;
- 
-    /** @type {HTMLInputElement} */
-    const szerzo2 = event.querySelector("#szerzo2");
-    /** @type {string} */
-    const szerzo2value = szerzo2.value;
- 
-    /** @type {HTMLInputElement}*/
-    const mu1 = event.querySelector("#mu1");
-    /** @type {string} */
-    const mu1value = mu1.value;
- 
-    /** @type {HTMLInputElement} */
-    const mu2 = event.querySelector("#mu2");
-    /** @type {string} */
-    const mu2value = mu2.value;
- 
-    /**
-     * @type {CountryWriters[]}
-     */
-    const obj = {}
-    obj.nationality = nemzetisegvalue;
-    obj.author1 = szerzo1value;
-    obj.author2 = szerzo2value;
-    obj.literarypiece1 = mu1value;
-    obj.literarypiece2 = mu2value;
- 
-    const tbody = document.getElementById("tablebody1");
- 
-    const tr2 = document.createElement('tr');
-    tbody.appendChild(tr2);
- 
-    const tr2_td1 = createCell("td",tr2,obj.nationality);
-    createCell("td",tr2,obj.author1);
-    createCell("td",tr2,obj.literarypiece1);
+/**
+ * Letrehoz egy teljes tablazatot: fejlec + tbody.
+ */
+function tabla_letrehoz(headerek, tbodyid) {
+    const table = document.createElement('table');
+    document.body.appendChild(table);
 
- 
-    if (obj.author2 && obj.literarypiece2) {
-        const tr3 = document.createElement('tr');
-        tbody.appendChild(tr3);
- 
-        createCell("td",tr3,obj.author2)
-        createCell("td",tr3,obj.literarypiece2)
- 
-        tr2_td1.rowSpan = 2;
+    fejlec_letrehoz(table, headerek);
+
+    const tbody = document.createElement('tbody');
+    tbody.id = tbodyid;
+    table.appendChild(tbody);
+
+    return tbody;
+}
+
+/**
+ * Letrehoz egy vagy ket sort, attol fuggoen hogy van-e masodik szerzo + mu.
+ */
+function sor_letrehoz(tbody, elem) {
+    const tr = document.createElement('tr');
+    tbody.appendChild(tr);
+
+    const elso = cell_letrehoz('td', tr, elem.nationality);
+
+    // Kattintasra kijeloles
+    elso.addEventListener('click', function (e) {
+        const cell = e.target;
+        const body = cell.parentElement.parentElement;
+
+        const regebbi = body.querySelector('.marked');
+        if (regebbi !== null) {
+            regebbi.classList.remove('marked');
+        }
+
+        cell.classList.add('marked');
+    });
+
+    cell_letrehoz('td', tr, elem.author1);
+    cell_letrehoz('td', tr, elem.literarypiece1);
+
+    if (elem.author2 !== undefined && elem.literarypiece2 !== undefined) {
+        const tr2 = document.createElement('tr');
+        tbody.appendChild(tr2);
+
+        cell_letrehoz('td', tr2, elem.author2);
+        cell_letrehoz('td', tr2, elem.literarypiece2);
+
+        elso.rowSpan = 2;
     }
 }
 
+/**
+ * A teljes tablazat ujrarajzolasa.
+ */
+function tabla_ujrarajzol(tbody, adatlista) {
+    tbody.innerHTML = '';
+    for (let i = 0; i < adatlista.length; i++) {
+        sor_letrehoz(tbody, adatlista[i]);
+    }
+}
 
-function validateFielads() {}
+/**
+ * A form letrehozasa tagolt szerkezettel: div + label + input + span.error
+ */
+function form_letrehoz(formid, mezok) {
+    const form = document.createElement('form');
+    form.id = formid;
+
+    for (let i = 0; i < mezok.length; i++) {
+        const wrap = document.createElement('div');
+        wrap.classList.add('formrow');
+
+        const lbl = document.createElement('label');
+        lbl.htmlFor = mezok[i].id;
+        lbl.innerText = mezok[i].label;
+        wrap.appendChild(lbl);
+
+        const inp = document.createElement('input');
+        inp.id = mezok[i].id;
+        wrap.appendChild(inp);
+
+        const err = document.createElement('span');
+        err.classList.add('error');
+        wrap.appendChild(err);
+
+        form.appendChild(wrap);
+    }
+
+    form.appendChild(document.createElement('br'));
+
+    const btn = document.createElement('button');
+    btn.type = 'submit';
+    btn.innerText = 'Hozzaadas';
+    form.appendChild(btn);
+
+    return form;
+}
+
+/**
+ * Egyetlen input mezo ellenorzese. Ha ures, hibaüzenet irasa.
+ */
+function mezot_ellenoriz(input, msg) {
+    let jo = true;
+
+    if (input.value.trim() === '') {
+        const div = input.parentElement;
+        const sp = div.querySelector('.error');
+        sp.innerText = msg;
+        jo = false;
+    }
+    return jo;
+}
+
+/**
+ * Harom kotelezo mezo ellenorzese egyszerre.
+ */
+function mezok_ellenoriz(a, b, c) {
+    let valid = true;
+    if (!mezot_ellenoriz(a, 'A mezo kitoltese kotelezo')) valid = false;
+    if (!mezot_ellenoriz(b, 'A mezo kitoltese kotelezo')) valid = false;
+    if (!mezot_ellenoriz(c, 'A mezo kitoltese kotelezo')) valid = false;
+    return valid;
+}
+
+/**
+ * Torli a form osszes hibauzenetet.
+ */
+function hibak_torol(form) {
+    const spans = form.querySelectorAll('.error');
+    for (let i = 0; i < spans.length; i++) {
+        spans[i].innerText = '';
+    }
+}
+
+/**
+ * A submit esemenykezelo:
+ * - validalas
+ * - uj objektum letrehozasa
+ * - tablazat frissitese
+ * - form reset
+ */
+function form_submit(e) {
+    e.preventDefault();
+
+    const form = e.target;
+
+    hibak_torol(form);
+
+    const nemz = form.querySelector('#nemzetiseg');
+    const szer1 = form.querySelector('#szerzo1');
+    const mu1 = form.querySelector('#mu1');
+    const szer2 = form.querySelector('#szerzo2');
+    const mu2 = form.querySelector('#mu2');
+
+    if (!mezok_ellenoriz(nemz, szer1, mu1)) return;
+
+    const adat = {
+        nationality: nemz.value.trim(),
+        author1: szer1.value.trim(),
+        literarypiece1: mu1.value.trim(),
+        author2: szer2.value.trim() !== '' ? szer2.value.trim() : undefined,
+        literarypiece2: mu2.value.trim() !== '' ? mu2.value.trim() : undefined
+    };
+
+    adatlista.push(adat);
+
+    const tbody = document.getElementById('tbody_id');
+    tabla_ujrarajzol(tbody, adatlista);
+
+    form.reset();
+}
