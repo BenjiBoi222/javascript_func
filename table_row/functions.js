@@ -1,224 +1,303 @@
 /**
- * Ez az adattipus irja le a tablazat egy elem tipusat.
- * A masodik szerzo es a masodik mu opcionálisak.
- * @typedef {{
- *   nationality:string,
- *   author1:string,
- *   author2?:string,
- *   literarypiece1:string,
- *   literarypiece2?:string
- * }} CountryWriters
+ * Írók országonkénti típusdefiníció
+ * @typedef {{nationality:string, author1:string, author2?:string, literarypiece1:string, literarypiece2?:string}} CountryWriters
  */
 
+ 
 /**
- * Ez a form generalasi mezotipus (id + label).
- * @typedef {{
- *   id:string,
- *   label:string
- * }} FormField
+ * Táblázat létrehozása
+ * 
+ * @param {string[]} headerList - a fejlécek feliratai
+ * @param {string} tbodyId - a tbody elem id-je
+ * @returns {HTMLTableElement} - a létrehozott táblázat elem
  */
+function generateTable(headerList, tbodyId) {
+    const table = document.createElement("table");
 
-/**
- * A cella tipusa td vagy th lehet.
- * @typedef {'td'|'th'} CellType
- */
+    // Fejléc létrehozása meglévő függvénnyel
+    generateHeader(table, headerList); 
 
-/**
- * Egy tabla cellat hoz letre, majd visszaadja azt.
- */
-function cell_letrehoz(celltype, parentrow, content) {
-    const c = document.createElement(celltype);
-    c.innerText = content;
-    parentrow.appendChild(c);
-    return c;
+    // tbody létrehozása
+    const tbody = document.createElement('tbody');
+    tbody.id = tbodyId;
+    table.appendChild(tbody);
+
+    // Táblázat hozzáadása a dokumentumhoz
+    document.body.appendChild(table);
+
+    return table;
 }
 
 /**
- * Letrehozza a tablazat fejlecet egy sorral.
+ * Fejléc létrehozása
+ * 
+ * @param {HTMLTableElement} table - a táblázat, amelyhez a thead tartozik
+ * @param {string[]} headerList - a fejléc feliratai
+ * @returns {HTMLTableSectionElement} - a létrehozott thead
  */
-function fejlec_letrehoz(table, headerek) {
+function generateHeader(table, headerList){
     const thead = document.createElement('thead');
     table.appendChild(thead);
 
     const tr = document.createElement('tr');
     thead.appendChild(tr);
 
-    for (let i = 0; i < headerek.length; i++) {
-        cell_letrehoz('th', tr, headerek[i]);
+    // Minden fejlécszöveghez létrehoz egy <th> cellát
+    for (let i of headerList){
+        createCell('th', i, tr)
     }
-
     return thead;
 }
 
 /**
- * Letrehoz egy teljes tablazatot: fejlec + tbody.
+ * tbody törzs újrarenderelése a megadott tömb alapján
+ * 
+ * @param {CountryWriters[]} array - a megjelenítendő adatok tömbje
  */
-function tabla_letrehoz(headerek, tbodyid) {
-    const table = document.createElement('table');
-    document.body.appendChild(table);
+function renderTableBody(array) {
+    const tablebody = document.getElementById('tablebody');
+    tablebody.innerHTML = ""; // korábbi tartalom törlése
 
-    fejlec_letrehoz(table, headerek);
-
-    const tbody = document.createElement('tbody');
-    tbody.id = tbodyid;
-    table.appendChild(tbody);
-
-    return tbody;
+    // Minden tömbelemhez új sor létrehozása
+    for(let a of array) {
+        renderTableRow(tablebody, a);
+    }
 }
 
 /**
- * Letrehoz egy vagy ket sort, attol fuggoen hogy van-e masodik szerzo + mu.
+ * Táblázatsor(ok) létrehozása egy CountryWriters objektumból
+ * Kezeli a rowspan alkalmazását, ha két soros megjelenés szükséges
+ * 
+ * @param {HTMLTableSectionElement} tablebody - a táblázat body, ahova a sorok kerülnek
+ * @param {CountryWriters} CountryWriters - az adott bejegyzés adatai
  */
-function sor_letrehoz(tbody, elem) {
-    const tr = document.createElement('tr');
-    tbody.appendChild(tr);
+function renderTableRow(tablebody, CountryWriters) {
+    const tr2 = document.createElement('tr');
+    tablebody.appendChild(tr2);
 
-    const elso = cell_letrehoz('td', tr, elem.nationality);
+    // Első cella: nemzetiség — kattintásra kijelölhető
+    const td1 = createCell('td', CountryWriters.nationality, tr2)
+    td1.addEventListener("click",function(e){
+        /**
+         * @type {HTMLTableCellElement}
+         */
+        const valtozo = e.target;
 
-    // Kattintasra kijeloles
-    elso.addEventListener('click', function (e) {
-        const cell = e.target;
-        const body = cell.parentElement.parentElement;
+        const tr = valtozo.parentElement;
+        const tbody = tr.parentElement;
+        const alrmarked = tbody.querySelector('.marked');
 
-        const regebbi = body.querySelector('.marked');
-        if (regebbi !== null) {
-            regebbi.classList.remove('marked');
+        // Egy cella legyen kijelölve egyszerre
+        if (alrmarked !== null) {
+            alrmarked.classList.remove('marked');
         }
 
-        cell.classList.add('marked');
+        valtozo.classList.add("marked");
     });
 
-    cell_letrehoz('td', tr, elem.author1);
-    cell_letrehoz('td', tr, elem.literarypiece1);
+    // Második és harmadik cella: első szerző és mű
+    const td2 = createCell('td', CountryWriters.author1, tr2);
+    const td3 = createCell('td', CountryWriters.literarypiece1, tr2);
 
-    if (elem.author2 !== undefined && elem.literarypiece2 !== undefined) {
-        const tr2 = document.createElement('tr');
-        tbody.appendChild(tr2);
+    // Ha van második szerző és mű, létrehoz egy külön sort a számukra
+    if (CountryWriters.author2 != undefined && CountryWriters.literarypiece2 != undefined) {
+        const tr3 = document.createElement('tr');
+        tablebody.appendChild(tr3);
 
-        cell_letrehoz('td', tr2, elem.author2);
-        cell_letrehoz('td', tr2, elem.literarypiece2);
+        const td4 = createCell('td', CountryWriters.author2, tr3);
+        const td5 = createCell('td', CountryWriters.literarypiece2, tr3);
 
-        elso.rowSpan = 2;
+        td1.rowSpan = 2; // a nemzetiség cella két sor magasságú lesz
     }
 }
 
 /**
- * A teljes tablazat ujrarajzolasa.
+ * Cellák létrehozása
+ * 
+ * @param {'td'|'th'} cellType - a létrehozandó cella típusa ('td' vagy 'th')
+ * @param {string} cellContent - a cella tartalma (szöveg)
+ * @param {HTMLTableRowElement} parentRow - a sor, amelyhez a cellát hozzáadjuk
+ * @returns {HTMLTableCellElement} - a létrehozott cella
  */
-function tabla_ujrarajzol(tbody, adatlista) {
-    tbody.innerHTML = '';
-    for (let i = 0; i < adatlista.length; i++) {
-        sor_letrehoz(tbody, adatlista[i]);
-    }
+function createCell(cellType, cellContent, parentRow) {
+    const cell = document.createElement(cellType); 
+    cell.innerText = cellContent;
+    parentRow.appendChild(cell);
+    return cell;
 }
 
 /**
- * A form letrehozasa tagolt szerkezettel: div + label + input + span.error
+ * Űrlapelem létrehozása (label + input + hibaszöveg)
+ * 
+ * @param {HTMLElement} forms - a form elem, amelyhez az elemet hozzáadjuk
+ * @param {string} id - az input id attribútuma
+ * @param {string} labelContent - a label szövege
  */
-function form_letrehoz(formid, mezok) {
+function createFormElement(forms, id, labelContent) {
+    const div = document.createElement('div');
+    forms.appendChild(div);
+
+    const label = document.createElement('label');
+    label.htmlFor = id;
+    label.innerText = labelContent;
+    div.appendChild(label);
+    
+    const br1 = document.createElement('br');
+    div.appendChild(br1);
+    
+    const input = document.createElement('input');
+    input.id = id;
+    div.appendChild(input);
+
+    const br2 = document.createElement('br');
+    div.appendChild(br2);
+
+    const br3 = document.createElement('br');
+    div.appendChild(br3);
+    
+    // Hibaszöveg span
+    const span = document.createElement('span');
+    span.classList.add("error");
+    div.appendChild(span);
+}
+
+/**
+ * Űrlap létrehozása a megadott mezőkkel
+ * 
+ * @param {string} id - a form id attribútuma
+ * @param {FormField[]} elements - a létrehozandó label-input párok adatai
+ * @returns {HTMLFormElement} - a létrehozott form elem
+ */
+function generateForm(id, elements) {
     const form = document.createElement('form');
-    form.id = formid;
+    form.id = id
 
-    for (let i = 0; i < mezok.length; i++) {
-        const wrap = document.createElement('div');
-        wrap.classList.add('formrow');
-
-        const lbl = document.createElement('label');
-        lbl.htmlFor = mezok[i].id;
-        lbl.innerText = mezok[i].label;
-        wrap.appendChild(lbl);
-
-        const inp = document.createElement('input');
-        inp.id = mezok[i].id;
-        wrap.appendChild(inp);
-
-        const err = document.createElement('span');
-        err.classList.add('error');
-        wrap.appendChild(err);
-
-        form.appendChild(wrap);
+    // Input mezők létrehozása
+    for (let elem of elements) {
+        createFormElement(form, elem.id, elem.label)
     }
 
-    form.appendChild(document.createElement('br'));
-
-    const btn = document.createElement('button');
-    btn.type = 'submit';
-    btn.innerText = 'Hozzaadas';
-    form.appendChild(btn);
+    // Hozzáadás gomb
+    const button = document.createElement('button');
+    button.innerText = 'Hozzáadás';
+    form.appendChild(button);
 
     return form;
 }
 
 /**
- * Egyetlen input mezo ellenorzese. Ha ures, hibaüzenet irasa.
+ * HTML űrlap submit eseménykezelője
+ * (Az htmlform eseménykezelőjét kiszervezzük ide)
+ * @param {Event} e - az esemény objektuma
  */
-function mezot_ellenoriz(input, msg) {
-    let jo = true;
+function HTMLFormEventListener(e) {
+    e.preventDefault(); // megakadályozza az oldal újratöltését
+    /**
+     * @type {HTMLFormElement}
+     */
+    const event = e.target;
 
-    if (input.value.trim() === '') {
-        const div = input.parentElement;
-        const sp = div.querySelector('.error');
-        sp.innerText = msg;
-        jo = false;
+    /** @type {HTMLInputElement} */
+    const nemzetiseg = event.querySelector("#nemzetiseg"); // szükséges inputok lekérése
+    /** @type {string} */
+    const nemzetisegvalue = nemzetiseg.value; // inputok értékei
+
+    /** @type {HTMLInputElement} */
+    const szerzo1 = event.querySelector("#szerzo1");
+    /** @type {string} */
+    const szerzo1value = szerzo1.value;
+
+    /** @type {HTMLInputElement} */
+    const szerzo2 = event.querySelector("#szerzo2");
+    /** @type {string} */
+    const szerzo2value = szerzo2.value;
+
+    /** @type {HTMLInputElement} */
+    const mu1 = event.querySelector("#mu1");
+    /** @type {string} */
+    const mu1value = mu1.value;
+
+    /** @type {HTMLInputElement} */
+    const mu2 = event.querySelector("#mu2");
+    /** @type {string} */
+    const mu2value = mu2.value;
+
+    // Validálás: ha hibás, megszakítjuk
+    if(!validateFields(nemzetiseg, szerzo1, mu1)) {
+        return;
     }
-    return jo;
+
+    // Új objektum létrehozása a táblázathoz
+    /** 
+     * @type {CountryWriters} 
+     */
+    const tomb = {};
+
+    tomb.nationality = nemzetisegvalue;
+    tomb.author1 = szerzo1value;
+    tomb.literarypiece1 = mu1value;
+
+    // Opcionális mezők beállítása, ha megadták őket
+    if (szerzo2value && mu2value) {
+        tomb.author2 = szerzo2value;
+        tomb.literarypiece2 = mu2value;
+    }
+
+    // Új sor beszúrása a táblázatba
+    const tbody = document.getElementById("tablebody1");
+    renderTableRow(tbody, tomb);
 }
 
 /**
- * Harom kotelezo mezo ellenorzese egyszerre.
+ * Validálás (egy mező)
+ * 
+ * @param {HTMLInputElement} inputField - a validálandó input
+ * @param {string} errorMsg - a megjelenítendő hibaüzenet
+ * @returns {boolean} - igaz, ha érvényes
  */
-function mezok_ellenoriz(a, b, c) {
+function validateField(inputField, errorMsg) {
     let valid = true;
-    if (!mezot_ellenoriz(a, 'A mezo kitoltese kotelezo')) valid = false;
-    if (!mezot_ellenoriz(b, 'A mezo kitoltese kotelezo')) valid = false;
-    if (!mezot_ellenoriz(c, 'A mezo kitoltese kotelezo')) valid = false;
+
+    if (inputField.value === "") {
+        const parentDiv = inputField.parentElement;
+        const error = parentDiv.querySelector(".error");
+        error.innerText = errorMsg; // hibaüzenet megjelenítése
+        valid = false;
+    }
     return valid;
 }
 
 /**
- * Torli a form osszes hibauzenetet.
+ * Validálás (több mező)
+ * 
+ * @param {HTMLInputElement} inputField1 - első kötelező mező
+ * @param {HTMLInputElement} inputField2 - második kötelező mező
+ * @param {HTMLInputElement} inputField3 - harmadik kötelező mező
+ * @returns {boolean} - igaz, ha minden mező érvényes
  */
-function hibak_torol(form) {
-    const spans = form.querySelectorAll('.error');
-    for (let i = 0; i < spans.length; i++) {
-        spans[i].innerText = '';
+function validateFields(inputField1, inputField2, inputField3) {
+    const form = inputField1.form;
+
+    // Korábbi hibák törlése
+    const error = form.querySelectorAll('.error');
+    for (const i of error) {
+        i.innerText = "";
+    } // hibaszövegek törlése
+
+    let valid = true;
+
+    // Kötelező mezők ellenőrzése
+    if (!validateField(inputField1, "Mező kitöltése kötelező!")) {
+        valid = false;
     }
-}
 
-/**
- * A submit esemenykezelo:
- * - validalas
- * - uj objektum letrehozasa
- * - tablazat frissitese
- * - form reset
- */
-function form_submit(e) {
-    e.preventDefault();
+    if (!validateField(inputField2, "Mező kitöltése kötelező!")) {
+        valid = false;
+    }
 
-    const form = e.target;
+    if (!validateField(inputField3, "Mező kitöltése kötelező!")) {
+        valid = false;
+    }
 
-    hibak_torol(form);
-
-    const nemz = form.querySelector('#nemzetiseg');
-    const szer1 = form.querySelector('#szerzo1');
-    const mu1 = form.querySelector('#mu1');
-    const szer2 = form.querySelector('#szerzo2');
-    const mu2 = form.querySelector('#mu2');
-
-    if (!mezok_ellenoriz(nemz, szer1, mu1)) return;
-
-    const adat = {
-        nationality: nemz.value.trim(),
-        author1: szer1.value.trim(),
-        literarypiece1: mu1.value.trim(),
-        author2: szer2.value.trim() !== '' ? szer2.value.trim() : undefined,
-        literarypiece2: mu2.value.trim() !== '' ? mu2.value.trim() : undefined
-    };
-
-    adatlista.push(adat);
-
-    const tbody = document.getElementById('tbody_id');
-    tabla_ujrarajzol(tbody, adatlista);
-
-    form.reset();
+    return valid;
 }
